@@ -1,4 +1,6 @@
 from scapy.all import IP, ICMP, Raw, sr1
+import datetime
+
 
 def alphabet_list(start = "A", end = 'z'):
     alphabet = []
@@ -15,20 +17,23 @@ def alphabet_list(start = "A", end = 'z'):
 
 def send_ttl(num, data):
     trace_packet = IP(dst = "www.google.com", ttl = num)/ICMP(type = 8, code = 0, id = num, seq = num)/Raw(data)
+    start = datetime.datetime.now()
     answer = sr1(trace_packet, timeout =1)
-    return answer
+    end = datetime.datetime.now()
+    timing =  end - start
+    return answer, timing
 
 def main():
     alphabet = alphabet_list(end= 'z')
 
-    for n in range(1,4):
-        answer = send_ttl(n, alphabet)
+    for n in range(1,5):
+        answer, timimg = send_ttl(n, alphabet)
         
         if answer == None:
-            print(f"router {n} did not answer")
+            print(f"Router {n} did not answer after {timimg.total_seconds():.3f} seconds.")
         else:
             n_ip = answer[IP].src
-            print(f"The {n} router ip is {n_ip}.")
+            print(f"Router {n} ip is {n_ip} took {timimg.total_seconds():.3f} seconds to get an answer.")
 
 if __name__ == "__main__":
     main()
