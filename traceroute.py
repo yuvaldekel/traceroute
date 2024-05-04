@@ -1,6 +1,6 @@
 from scapy.all import IP, ICMP, Raw, sr1, Net
 import datetime
-
+from sys import argv
 
 def alphabet_list(start = "A", end = 'z'):
     alphabet = []
@@ -24,7 +24,8 @@ def send_ttl(dst_ip, num, data):
     return answer, timing
 
 def main():
-    dst_ip = input("Enter destination: ")
+    #dst_ip = input("Enter destination: ")
+    dst_ip = argv[1]
     
     alphabet = alphabet_list(end= 'z')
     
